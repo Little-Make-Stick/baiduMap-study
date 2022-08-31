@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+        body,
+        html,
+        #allmap {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            margin: 0;
+            font-family: "微软雅黑";
+        }
+    </style>
+    <script type="text/javascript"
+        src="http://api.map.baidu.com/api?v=2.0&ak=IfkNE0XDdoaTwdGGkOWrALDkFZOTI9b8"></script>
+    <title>个性化地图V1</title>
+</head>
+
+<body>
+    <div id="allmap"></div>
+</body>
+
+</html>
+<script type="text/javascript">
+    /* ******************* 样式集 *********************
+     *  https://developer.baidu.com/map/custom/list.htm
+     *
+     * ************************************************/
+    // 百度地图API功能
+    // GPS坐标
+    var x = 116.32715863448607;
+    var y = 39.990912172420714;
+    var ggPoint = new BMap.Point(x, y);
+
+    // 地图初始化
+    var bm = new BMap.Map("allmap");
+    // 地图初始化中心点并展示缩放级别
+    bm.centerAndZoom(ggPoint, 15);
+    //开启鼠标滚轮缩放
+    bm.enableScrollWheelZoom(true);
+
+    // 定义一个控件类
+    function ZoomControl() {
+        // 设置默认位置
+        this.defaultAnchor = BMAP_ANCHOR_TOP_LEFT;
+        // 设置默认位置偏移量
+        this.defaultOffset = new BMap.Size(20, 20)
+    }
+    //通过JavaScript的prototype属性继承于BMap.Control
+    ZoomControl.prototype = new BMap.Control()
+    //自定义控件必须实现自己的initialize方法，并且将控件的DOM元素返回
+    //在本方法中创建个div元素作为控件的容器，并将其添加到地图容器中
+    ZoomControl.prototype.initialize = function (map) {
+        //创建一个dom元素
+        var select = document.createElement('select');
+
+        // 设置样式
+        select.style.cursor = "pointer";
+        select.style.padding = "7px 10px";
+        select.style.boxShadow = "0 2px 6px 0 rgba(27, 142, 236, 0.5)";
+        select.style.borderRadius = "5px";
+        select.style.backgroundColor = "white";
+
+        var styleThemes = [
+            {
+                label: '默认地图样式',
+                value: 'normal',
+            }, {
+                label: '清新蓝风格',
+                value: 'light',
+            }, {
+                label: '黑夜风格',
+                value: 'dark',
+            }, {
+                label: '红色警戒风格',
+                value: 'redalert',
+            }, {
+                label: '精简风格',
+                value: 'googlelite',
+            }, {
+                label: '自然绿风格',
+                value: 'grassgreen',
+            }, {
+                label: '午夜蓝风格',
+                value: 'midnight',
+            }, {
+                label: '浪漫粉风格',
+                value: 'pink',
+            }, {
+                label: '青春绿风格',
+                value: 'darkgreen',
+            }, {
+                label: '清新蓝绿风格',
+                value: 'bluish',
+            }, {
+                label: '高端灰风格',
+                value: 'grayscale',
+            }, {
+                label: '强边界风格',
+                value: 'hardedge',
+            }]
+
+        for(let i = 0; i < styleThemes.length; i++){
+            let option = document.createElement('option');
+            option.label = styleThemes[i].label;
+            option.value = styleThemes[i].value;
+
+            select.appendChild(option)
+        }
+        
+        // 绑定事件,点击一次放大两级
+        select.onchange = function (e) {
+            console.log(select.value)
+            map.setMapStyle({style: select.value})
+        }
+
+        // 添加DOM元素到地图中
+        map.getContainer().appendChild(select);
+        // 将DOM元素返回
+        return select;
+    }
+    //创建控件元素
+    var myZoomCtrl = new ZoomControl();
+    //添加到地图中
+    bm.addControl(myZoomCtrl);
+</script>

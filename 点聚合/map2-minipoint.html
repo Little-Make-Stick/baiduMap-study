@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <link type="text/css" rel="stylesheet" href="~/Resources/css/schooldistr.css" /> -->
+    <link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
+
+
+    <!-- <link type="text/css" rel="stylesheet" href="~/Resources/css/public.css" /> -->
+</head>
+
+<body>
+
+    <script type="text/javascript"
+        src="http://api.map.baidu.com/api?v=2.0&ak=IfkNE0XDdoaTwdGGkOWrALDkFZOTI9b8"></script>
+    <!-- <script type=" text/javascript" src="~/Resources/static/jquery-3.2.1.min.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <!-- <script type="text/javascript" src="~/Resources/static/handlebars-v4.0.11.js"></script> -->
+    <script type="text/javascript" src="./js/map2-minipoint.js"></script>
+    <script type="text/javascript"
+        src="http://api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
+    <script type="text/javascript"
+        src="http://api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
+    <script type="text/javascript"
+        src="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>
+    <div class="main" style="width: 100%; height: 100%;">
+        <!--下拉列表模板-->
+        <div class="dropdownbar" id="DropdownBar">
+            <script id="DropdownTemplate" type="text/x-handlebars-template">
+            <ul>
+                <li id="li-CategStandard">
+                    <span class="menu"></span>
+                    <div class="dropdown-group btn-group">
+                        <button id="CategStandard" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-value="{{CategStandard.[0].CategStandardName}}" data-limit="{{CategStandard.[0].LimitedData}}" data-name="{{CategStandard.[0].Indicator}}">
+                            {{CategStandard.[0].CategStandardName}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            {{#if CategStandard}}
+                            {{#each CategStandard}}
+                            <li><a href="javascript:void(0);" data-value="{{this.CategStandardName}}" data-limit="{{this.LimitedData}}" data-name="{{this.Indicator}}">{{this.CategStandardName}}</a></li>
+                            {{/each}}
+                            {{/if}}
+                        </ul>
+                    </div>
+                </li>
+                <li id="li-Indicator" style="display:none">
+                    <label class="dropdown-label">指标：</label>
+                    <div class="dropdown-group btn-group">
+                        <button id="Indicator" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-limit="{{Indicator.[0].LimitedData}}" data-value="{{Indicator.[0].IndicatorName}}">
+                            {{Indicator.[0].IndicatorName}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            {{#if Indicator}}
+                            {{#each Indicator}}
+                            <li><a href="javascript:void(0);" data-value="{{this.IndicatorName}}" data-limit="{{this.LimitedData}}">{{this.IndicatorName}}</a></li>
+                            {{/each}}
+                            {{/if}}
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <label class="dropdown-label">区域：</label>
+                    <div class="dropdown-group btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="firstareacode" data-name="{{Areas.[0].AreaName}}" data-code="{{Areas.[0].AreaCode}}" data-grade="{{Areas.[0].AreaGrade}}">
+                            {{Areas.[0].AreaName}}
+                            <span class="caret"></span>
+                        </button>
+
+                        <ul class="dropdown-menu">
+                            {{#if Areas}}
+                            {{#each Areas}}
+                            <li><a onclick="GetSecondArea(this)" href="javascript:void(0);" data-name="{{this.AreaName}}"  data-code="{{this.AreaCode}}" data-grade="{{this.AreaGrade}}">{{this.AreaName}}</a></li>
+                            {{/each}}
+                            {{/if}}
+                        </ul>
+                    </div>
+                </li>
+
+                <li id="second-area" class="second-area"></li>
+
+                <li>
+                    <label class="dropdown-label">年份：</label>
+                    <div class="dropdown-group btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" id="time" data-toggle="dropdown" data-time="{{ Years.[0]}}" data-id="time" data-value="{{ Years.[0]}}">
+                            {{ Years.[0]}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            {{#if Years}}
+                            {{#each Years}}
+                            <li><a href="javascript:void(0);" data-value="{{this}}">{{this}}</a></li>
+                            {{/each}}
+                            {{/if}}
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <label class="dropdown-label">学校级别：</label>
+                    <div class="dropdown-group btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" id="SchoolGrade" data-toggle="dropdown" data-grade="{{SchoolLevels.[0]}}" data-id="schoollevel" data-value="{{SchoolLevels.[0]}}">
+                            {{SchoolLevels.[0]}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            {{#if SchoolLevels}}
+                            {{#each SchoolLevels}}
+                            <li><a href="javascript:void(0);" data-value="{{this}}">{{this}}</a></li>
+                            {{/each}}
+                            {{/if}}
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="submit">
+                    <button type="button" class="btn btn-danger" id="MapSubmit">确定</button>
+                </li>
+            </ul>
+        </script>
+
+        </div>
+        <!--百度地图API-->
+        <div id="map" style="width: 100%; height: 100%;"></div>
+        <div id="Div_MapExmple" class="MapExmple">
+
+        </div>
+    </div>
+    <!--二级地区下拉列表模板-->
+    <script id="test" type="text/x-handlebars-template">
+
+    <label class="dropdown-label">区域：</label>
+    <div class="dropdown-group btn-group">
+        <button type="button" id="secondareacode" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-id="area" data-name="{{SecondAreas.[0].AreaName}}" data-code="{{SecondAreas.[0].AreaCode}}" data-grade="{{SecondAreas.[0].AreaGrade}}">
+            {{SecondAreas.[0].AreaName}}
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            {{#if SecondAreas}}
+            {{#each SecondAreas}}
+            <li><a href="javascript:void(0);" data-name="{{this.AreaName}}" data-code="{{this.AreaCode}}" data-grade="{{this.AreaGrade}}">{{this.AreaName}}</a></li>
+            {{/each}}
+            {{/if}}
+        </ul>
+    </div>
+
+</script>
+</body>
+
+</html>

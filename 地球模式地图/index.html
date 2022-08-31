@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+        body,
+        html,
+        #allmap {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            margin: 0;
+            font-family: "微软雅黑";
+        }
+    </style>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?type=webgl&v=1.0&ak=IfkNE0XDdoaTwdGGkOWrALDkFZOTI9b8"></script>
+    <title>地球模式</title>
+</head>
+
+<body>
+    <div id="allmap"></div>
+</body>
+
+</html>
+<script type="text/javascript">
+    // GL版命名空间为BMapGL
+    // 创建Map实例
+    var map = new BMapGL.Map("allmap");   
+    // 初始化地图,设置中心点坐标和地图级别 
+    map.centerAndZoom(new BMapGL.Point(118.5, 27.5), 5); 
+    //开启鼠标滚轮缩放 
+    map.enableScrollWheelZoom(true);     
+    // 设置地图类型为地球模式
+    /* **********************************************
+     * 地球模式（BMAP_EARTH_MAP）
+     * 标准地图（BMAP_NORMAL_MAP）
+     * 普通卫星图模式（BMAP_SATELLITE_MAP）
+     * **********************************************/
+    map.setMapType(BMAP_EARTH_MAP);     
+</script>
