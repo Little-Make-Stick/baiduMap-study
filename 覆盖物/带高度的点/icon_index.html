@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <title>带高度的点纹理贴图</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <style>
+        body,
+        html,
+        #container {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            font-family: "微软雅黑";
+        }
+    </style>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?type=webgl&v=1.0&ak=IfkNE0XDdoaTwdGGkOWrALDkFZOTI9b8"></script>
+</head>
+
+<body>
+    <div id="container"></div>
+</body>
+
+</html>
+<script>
+    var map = new BMapGL.Map('container');
+    var point = new BMapGL.Point(116.443, 39.935);
+    map.centerAndZoom(point, 13);
+    map.enableScrollWheelZoom();
+    map.setTilt(70);
+
+
+    var citys = [{
+        name: '北京大学',
+        img: 'http://127.0.0.1:5500/%E8%A6%86%E7%9B%96%E7%89%A9/%E5%B8%A6%E9%AB%98%E5%BA%A6%E7%9A%84%E7%82%B9/icons/beida.png'
+    }, {
+        name: '清华大学',
+        img: 'http://127.0.0.1:5500/%E8%A6%86%E7%9B%96%E7%89%A9/%E5%B8%A6%E9%AB%98%E5%BA%A6%E7%9A%84%E7%82%B9/icons/qinghua.png'
+    }, {
+        name: '中央财经大学',
+        img: 'http://127.0.0.1:5500/%E8%A6%86%E7%9B%96%E7%89%A9/%E5%B8%A6%E9%AB%98%E5%BA%A6%E7%9A%84%E7%82%B9/icons/zhongcai.png'
+    }, {
+        name: '北京交通大学',
+        img: 'http://127.0.0.1:5500/%E8%A6%86%E7%9B%96%E7%89%A9/%E5%B8%A6%E9%AB%98%E5%BA%A6%E7%9A%84%E7%82%B9/icons/beijiao.png'
+    }, {
+        name: '北京工业大学',
+        img: 'http://127.0.0.1:5500/%E8%A6%86%E7%9B%96%E7%89%A9/%E5%B8%A6%E9%AB%98%E5%BA%A6%E7%9A%84%E7%82%B9/icons/beigong.png'
+    }, {
+        name: '北京邮电大学',
+        img: 'http://127.0.0.1:5500/%E8%A6%86%E7%9B%96%E7%89%A9/%E5%B8%A6%E9%AB%98%E5%BA%A6%E7%9A%84%E7%82%B9/icons/beiyou.png'
+    }, {
+        name: '北京理工大学',
+        img: 'http://127.0.0.1:5500/%E8%A6%86%E7%9B%96%E7%89%A9/%E5%B8%A6%E9%AB%98%E5%BA%A6%E7%9A%84%E7%82%B9/icons/beili.png'
+    }, {
+        name: '北京航空航天大学',
+        img: 'http://127.0.0.1:5500/%E8%A6%86%E7%9B%96%E7%89%A9/%E5%B8%A6%E9%AB%98%E5%BA%A6%E7%9A%84%E7%82%B9/icons/beihang.png'
+    }, {
+        name: '中国传媒大学',
+        img: 'http://127.0.0.1:5500/%E8%A6%86%E7%9B%96%E7%89%A9/%E5%B8%A6%E9%AB%98%E5%BA%A6%E7%9A%84%E7%82%B9/icons/zhongchuan.png'
+    }];
+
+    var cityGeo = new BMapGL.Geocoder();
+    for (let i = 0; i < citys.length; i++) {
+        // 地址解析获取对应经纬度
+        cityGeo.getPoint(citys[i].name, function (point) { 
+            console.log(citys[i].name, point)
+            var pt = new BMapGL.Point(point.lng, point.lat);
+            var icon = new BMapGL.Icon(citys[i].img, new BMapGL.Size(40, 40));
+            var marker = new BMapGL.Marker3D(pt, Math.round(Math.random()) * 6000, {
+                size: 80,
+                icon: icon
+            });
+            map.addOverlay(marker);
+        });
+    }
+</script>
